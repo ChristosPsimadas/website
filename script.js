@@ -30,11 +30,35 @@ document.getElementById("submitButton").addEventListener("click", async function
                 document.getElementById("result").textContent = `The relationship between ${classA} and ${classB} is unknown.`;
             }
         }
-
         else
         {
             document.getElementById("result").textContent = error;
+            console.log(error);
+        }
 
+
+        //Check opposite direction now, swap classA and classB
+        const oppositeDirection = await fetch(`http://127.0.0.1:5000/api/relationship?classA=${encodeURIComponent(classB)}&classB=${encodeURIComponent(classA)}`);
+        if (oppositeDirection.ok)
+        {
+            const oppositeDirectionData = await oppositeDirection.json();
+            
+            if (oppositeDirectionData.relationship == "a subset")
+            {
+                document.getElementById("oppositeDirResult").textContent = `${classB} is ${data.relationship} of ${classA}.`;
+            }
+            else if (oppositeDirectionData.relationship == "equal")
+            {
+                document.getElementById("oppositeDirResult").textContent = `${classB} is equal to ${classA}.`;
+            }
+            else
+            {
+                document.getElementById("oppositeDirResult").textContent = `The relationship between ${classA} and ${classB} is unknown.`;
+            }
+        }
+        else
+        {
+            document.getElementById("oppositeDirResult").textContent = error;
             console.log(error);
         }
     }
